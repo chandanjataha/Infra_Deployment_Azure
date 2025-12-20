@@ -1,14 +1,13 @@
 resource "azurerm_public_ip" "az-pip" {
 for_each = var.pip
 
-  name                = each.value.pip_name
+  name                = each.value.name
   resource_group_name = each.value.resource_group_name
   location            = each.value.location
   allocation_method   = each.value.allocation_method
 
-  tags = {
-    environment = "Production"
-  }
+  # tags = {
+  #   environment = "Production"
+  # }
 }
 
-variable "pip"{}

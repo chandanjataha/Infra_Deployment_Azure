@@ -1,6 +1,7 @@
 variable "prg"{}
 variable "pvnet"{}
-variable "psub"{}
+variable "psubnet"{}
 variable "pnic"{}
 variable "ppip"{}
-variable "pdata"{}
+variable "pstg"{}
+variable "pvm"{}

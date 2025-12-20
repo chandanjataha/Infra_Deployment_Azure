@@ -11,7 +11,7 @@ module "md-virtual_network"{
 module "md-subnet" {
     depends_on = [ module.md-virtual_network ]
     source = "../../modules/azurerm_subnet"
-    sub = var.psub
+    subnet = var.psubnet
 } 
 
 module "md-public_ip" {
@@ -24,6 +24,18 @@ module "md-nic" {
     depends_on = [ module.md-public_ip, module.md-subnet ]
     source = "../../modules/azurerm_nic"
     nic = var.pnic
-    data = var.pdata
+    pip = var.ppip
+    subnet = var.psubnet
+}
+module "md-stg"{
+    depends_on = [ module.md-rg ]
+    source = "../../modules/azurerm_storage_account"
+    stg = var.pstg
+}
 
+module "md-vm" {
+    depends_on = [ module.md-nic ]
+    source = "../../modules/azurerm_compute"
+    vm = var.pvm
+    nic  = var.pnic
 }
