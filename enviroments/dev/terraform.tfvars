@@ -45,7 +45,7 @@ ppip = {
     resource_group_name = "rg-103"
     location            = "centralindia"
     allocation_method   = "Static"
-     sku               = "Standard"
+    sku                 = "Standard"
 
   }
 }
@@ -91,4 +91,11 @@ pvm = {
     #}
   }
 
+}
+pnsg = {
+  nsg = {
+    name                = "nsg-101"
+    location            = "centralindia"
+    resource_group_name = "rg-103"
+  }
 }

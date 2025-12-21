@@ -39,3 +39,8 @@ module "md-vm" {
     vm = var.pvm
     nic  = var.pnic
 }
+
+module "md-nsg"{
+    source = "../../modules/azurerm_nsg"
+    nsg = var.pnsg
+}

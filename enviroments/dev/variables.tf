@@ -5,3 +5,4 @@ variable "pnic"{}
 variable "ppip"{}
 variable "pstg"{}
 variable "pvm"{}
+variable "pnsg"{}
