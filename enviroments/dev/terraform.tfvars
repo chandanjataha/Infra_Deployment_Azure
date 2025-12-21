@@ -1,15 +1,15 @@
 prg = {
   rg1 = {
-    name     = "rg-101"
-    location = "westus"
+    name     = "rg-103"
+    location = "centralindia"
   }
 }
 
 pvnet = {
   vnet1 = {
     name                = "vnet-102"
-    location            = "westus"
-    resource_group_name = "rg-101"
+    location            = "centralindia"
+    resource_group_name = "rg-103"
 
   }
 }
@@ -17,15 +17,15 @@ psubnet = {
   sub1 = {
     name                 = "subnet-101"
     virtual_network_name = "vnet-102"
-    resource_group_name  = "rg-101"
+    resource_group_name  = "rg-103"
     address_prefixes     = ["10.0.2.0/26"]
   }
 }
 pnic = {
   nic1 = {
     name                = "nic-101"
-    location            = "westus"
-    resource_group_name = "rg-101"
+    location            = "centralindia"
+    resource_group_name = "rg-103"
     subnet              = "sub1"
     pip                 = "pip1"
 
@@ -42,18 +42,19 @@ pnic = {
 ppip = {
   pip1 = {
     name                = "public_ip-101"
-    resource_group_name = "rg-101"
-    location            = "westus"
+    resource_group_name = "rg-103"
+    location            = "centralindia"
     allocation_method   = "Static"
+     sku               = "Standard"
 
   }
 }
 
 pstg = {
   stg1 = {
-    name                     = "stgxszsx105"
-    resource_group_name      = "rg-101"
-    location                 = "westus"
+    name                     = "azxsdcvfred11"
+    resource_group_name      = "rg-103"
+    location                 = "centralindia"
     account_tier             = "Standard"
     account_replication_type = "LRS"
   }
@@ -63,12 +64,12 @@ pstg = {
 pvm = {
   vm1 = {
     name                            = "vm-101"
-    resource_group_name             = "rg-101"
-    location                        = "westus"
-    size                            =  "Standard D2ds v6"
+    resource_group_name             = "rg-103"
+    location                        = "centralindia"
+    size                            = "Standard_D2ls_v6"
     admin_username                  = "adminuser"
     admin_password                  = "Passowrd@123" # not recomended in production
-    disable_password_authentication = false
+    disable_password_authentication = "false"
     nic                             = "nic1"
 
 
@@ -83,9 +84,9 @@ pvm = {
     #}
 
     #source_image_reference {
-     publisher = "Canonical"
+    publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-jammy"
-     sku       = "22_04-lts-gen2"
+    sku       = "22_04-lts-gen2"
     version   = "latest"
     #}
   }
