@@ -1,5 +1,8 @@
 trigger: none
-
+  # branches:
+  # include
+  #  - main
+  #  - features/*
 stages: 
 #################################
 # Pre Commit - Liniting
@@ -9,12 +12,13 @@ stages:
     - job: SAST
       displayName: Static Analysis Stage
       pool: Default
+      continueOnError: true  # only for dev environment.
       steps:
       - task: tfsec@1
         inputs:
           version: 'v1.26.0'
 #################################
-# Plan and Review Stage
+# Terraform Install and Plan
 ###################################
   - stage: Install
     jobs:
@@ -76,6 +80,49 @@ stages:
         inputs:
           targetType: 'inline'
           script: 'infracost breakdown --path C:\Users\chand\OneDrive\Desktop\Tools\agent\_work\5\s\enviroments\dev'
+#################################
+# Approval & Governance Stage
+#################################
+  - stage: ManualValidation
+    jobs:
+    - job: ManualValidation
+      displayName: Manual Validation
+      pool: Server
+      steps:
+      - task: ManualValidation@1
+        inputs:
+          notifyUsers: 'chandanjataha1@outlook.com'
+          approvers: 'chandanjataha1@outlook.com'
+
+#################################
+# Deploy: Apply Stage
+#################################
+  - stage: Deploy
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    dependsOn:
+    - ManualValidation
+    jobs:
+    - job: Deploy
+      displayName: Infra Deployment
+      pool: Default
+      steps:
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/enviroments/dev'
+          backendServiceArm: 'sp3'
+          backendAzureRmStorageAccountName: 'pipelinestgaqs'
+          backendAzureRmContainerName: 'tfstatecontainer'
+          backendAzureRmKey: 'terraform.tfstate'
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/enviroments/dev'
+          environmentServiceNameAzureRM: 'sp3'
+      
+      
 
           
           
