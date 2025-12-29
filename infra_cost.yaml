@@ -14,7 +14,7 @@ stages:
         inputs:
           version: 'v1.26.0'
 #################################
-# Terraform Install and Plan
+# Plan and Review Stage
 ###################################
   - stage: Install
     jobs:
