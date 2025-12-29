@@ -48,7 +48,7 @@ stages:
           workingDirectory: '$(System.DefaultWorkingDirectory)/enviroments/dev'
           environmentServiceNameAzureRM: 'sp3'
 #################################
-# Cost and Impact Assement Stage
+# Cost and Impact Assessment Stage
 ###################################
 
   - stage: FinOps
