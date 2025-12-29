@@ -1,0 +1,75 @@
+trigger: none
+
+stages: 
+  - stage: PreCommit
+    jobs:
+    - job: SAST
+      displayName: Static Analysis Stage
+      pool: Default
+      steps:
+      - task: tfsec@1
+        inputs:
+          version: 'v1.26.0'
+  
+  - stage: Install
+    jobs:
+    - job: terraformInstall
+      displayName: Plan and review stage
+      pool: Default
+      steps:
+      - task: TerraformInstaller@1
+        inputs:
+          terraformVersion: 'latest'
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/enviroments/dev'
+          backendServiceArm: 'sp3'
+          backendAzureRmStorageAccountName: 'pipelinestgaqs'
+          backendAzureRmContainerName: 'tfstatecontainer'
+          backendAzureRmKey: 'terraform.tfstate'
+
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'validate'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/enviroments/dev'
+        
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'plan'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/enviroments/dev'
+          environmentServiceNameAzureRM: 'sp3'
+
+
+  - stage: FinOps
+    jobs:
+    - job: infraCost
+      displayName: Cost & Impact Assessment stage
+      pool: Default
+      steps:
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/enviroments/dev'
+          backendServiceArm: 'sp3'
+          backendAzureRmStorageAccountName: 'pipelinestgaqs'
+          backendAzureRmContainerName: 'tfstatecontainer'
+          backendAzureRmKey: 'terraform.tfstate'
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'plan'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/enviroments/dev'
+          environmentServiceNameAzureRM: 'sp3'
+      - task: PowerShell@2
+        inputs:
+          targetType: 'inline'
+          script: 'infracost breakdown --path C:\Users\chand\OneDrive\Desktop\Tools\agent\_work\5\s\enviroments\dev'
+
+          
+          
+      
